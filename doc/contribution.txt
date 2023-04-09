@@ -1,6 +1,18 @@
-Team Members:
+Team Members
 Janki Padiya
 Omkar Pisal
 Heet Punjawat
 Shivanjay Wagh
 Manan Kohli
+
+Milestone 1
+- Grammer has been designed by Heet, Manan, Janki and verifed by Omkar and Shivanjay.
+- Janki created the Design Diagram.
+- Everyone contributed to Diagram description. 
+- The final document is compiled by everyone on regular zoom calls.
+
+Project Level Contribution (Expected)
+Omkar Pisal, Heet Punjawat - Lexer
+Shivanjay Wagh - Parser
+Manan Kohli - Interpreter (Evaluator)
+Janki Padiya - Testing
