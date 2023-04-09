@@ -1,0 +1,130 @@
+---------------------
+% TERMINALS %
+---------------------
+
+bool_val --> ['True'].
+bool_val --> ['False'].
+
+var_type --> ['int'] | ['float'] | ['bool'] | ['string'].
+
+and_operator --> ['and'].
+or_operator --> ['or'].
+not_operator --> ['not'].
+
+assignment_operator --> [‘=’].
+end_of_statement --> [‘;’].
+
+inc_operator --> ['++'].
+dec_operator --> ['--'].
+
+comp_operators --> ['<'], ['>'], ['<='], ['>='], ['=='], ['!='].
+
+ternary_operator --> ['?']
+
+lower_case --> ['a'] | ['b'] | ['c'] | ['d'] | ['e'] | ['f'] | ['g'] | ['h'] | ['i'] | ['j'] | ['k'] | ['l'] | ['m'] | ['n'] | ['o'] | ['p'] | ['q'] | ['r'] | ['s'] | ['t'] | ['u'] | ['v'] | ['w'] | ['x'] | ['y'] | ['z'].
+
+upper_case --> ['A'] | ['B'] | ['C'] | ['D'] | ['E'] | ['F'] | ['G'] | ['H'] | ['I'] | ['J'] | ['K'] | ['L'] | ['M'] | ['N'] | ['O'] | ['P'] | ['Q'] | ['R'] | ['S'] | ['T'] | ['U'] | ['V'] | ['W'] | ['X'] | ['Y'] | ['Z'].
+
+symbol --> [' '] | ['~'] | ['!'] | ['@'] | ['#'] | ['$'] | ['%'] | ['^'] | ['&'] | ['+'] | ['-'] | ['*'] | ['/'] | [','] | ['.'] | [':'] | [';'] | ['<'] | ['='] | ['>'] | ['?'] | ['\\'] | ['\"'] | ['_'] | ['`'] | ['('] | [')'] | ['['] | [']'] | ['{'] | ['}'] | ['|'].
+
+digit --> ['0'] | ['1'] | ['2'] | ['3'] | ['4'] | ['5'] | ['6'] | ['7'] | ['8'] | ['9'].
+
+single_quote --> ['\''].
+double_quote --> ['\'].
+
+---------------------
+/* NON-TERMINALS */
+---------------------
+
+program --> statement_list.
+
+block --> ['{'], statement_list, ['}'].
+
+statement_list --> statement.
+statement_list --> statement, statement_list.
+statement_list --> statement_without_block.
+statement_list --> statement_without_block, statement_list.
+
+
+% statements without block (simple statements)
+statement_without_block --> print_statement.
+statement_without_block --> assign_statement.
+statement_without_block --> var_decl_statement.
+
+% Multi Line statements (complex statements)
+statement --> while_loop_statement.
+statement --> for_loop_statement.
+statement --> for_enhanced_statement.
+statement --> if_statement.
+statement --> if_elif_else_statement.
+statement --> if_else_statement.
+
+if_clause --> ['if'], ['('], condition, [')'], block.
+else_clause --> ['else'], block.
+elif_clause --> ['elif'], ['('], condition, [')'], block.
+elif_clause --> ['elif'], ['('], condition, [')'], block, elif_clause.
+
+if_statement --> if_clause.
+if_elif_else_statement --> if_clause, elif_clause, else_clause.
+if_else_statement --> if_clause, else_clause.
+
+while_loop_statement --> ['while'], ['('], condition, [')'], block.
+
+for_enhanced_statement --> ['for'], var_name, ['in'], ['range'], ['('], range_val, [';'], range_val, [')'], block.
+
+range_val --> var_name | integer.
+
+for_loop_statement --> ['for'], ['('], assign_statement, [';'], condition, [';'], var_change_part, [')'], block.
+
+var_change_part --> inc_expression.
+var_change_part --> dec_expression.
+var_change_part --> var_name, assignment_operator, expression.
+
+condition --> expression, comp_operators, expression.
+
+inc_expression --> var_name, inc_operator.
+inc_expression --> inc_operator, var_name.
+dec_expression --> var_name, dec_operator.
+dec_expression --> dec_operator, var_name.
+
+print_statement --> [print_str], ['('], string_val, [')'], end_of_statement.
+print_statement --> [print_str], ['('], var_name, [')'], end_of_statement.
+print_statement --> [print_expr], ['('], expression, [')'], end_of_statement.
+
+expression --> value.
+expression --> value, operator, expression.
+expression --> ternary_expression.
+expression --> ['('], expression, [')'], operator, expression.
+
+ternary_expression --> ['('], condition, [')'], ['?'], expression, [':'], expression.
+
+value --> float | integer | bool_val | string_val | var_name.
+
+boolean_operators --> and_operator | or_operator | not_operator.
+
+operators --> ['+'] | ['-'] | ['*'] | ['/'] | boolean_operators.
+
+assign_statement --> var_name, assignment_operator, expression, end_of_statement.
+
+var_decl_statement --> var_type, var_name, end_of_statement.
+var_decl_statement --> var_type, var_name, assignment_operator, expression, end_of_statement.
+
+var_name --> lower_case, var_name.
+var_name --> var_name, upper_case.
+var_name --> var_name, upper_case, var_name.
+var_name --> var_name, ['_'], var_name.
+var_name --> lower_case.
+
+string_val --> single_quote, char_phrase, single_quote.
+string_val --> double_quote, char_phrase, double_quote.
+
+char_phrase --> char, char_phrase.
+char_phrase --> char.
+
+char --> lower_case | upper_case | digit | symbol.
+
+float --> integer, ['.'], integer.
+float --> integer.
+
+integer --> digit, integer.
+integer --> digit.
