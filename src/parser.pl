@@ -1,5 +1,6 @@
 /* Start Symbol */
-program(t_program(P)) --> statement_list(P).
+program(p_program(P)) --> statement_list(P).
+program --> statement_list.
 
 /* Blocks */
 block(t_block(StatementList)) --> ['{'], statement_list(StatementList), ['}'].
