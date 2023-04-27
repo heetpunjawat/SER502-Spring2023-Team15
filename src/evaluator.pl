@@ -17,14 +17,14 @@ evaluator_comm(t_assignment_expression(t_variable_name(Name), Expression), Env, 
     evaluator_expr(Expression, Env, R1),
     change_comm(Name, R1, Env, NewEnv).
 evaluator_comm(t_variable_declaration_command(Type, t_variable_name(Name), Expression), Env, NewEnv) :-
-    eval_variable_type(Type, Env, R1),
+    evaluator_var_type(Type, Env, R1),
     evaluator_expr(Expression, Env, R2),
     change_comm(R1, Name, R2, Env, NewEnv).
 
-evaluator_comm(t_variable_declaration_command(Type, t_variable_name(Name)), Env, NewEnv) :- eval_variable_type(Type, Env, R1), R1 = int,  change_comm(R1, Name, 0, Env, NewEnv).
-evaluator_comm(t_variable_declaration_command(Type, t_variable_name(Name)), Env, NewEnv) :- eval_variable_type(Type, Env, R1), R1 = float,  change_comm(R1, Name, 0.0, Env, NewEnv).
-evaluator_comm(t_variable_declaration_command(Type, t_variable_name(Name)), Env, NewEnv) :- eval_variable_type(Type, Env, R1), R1 = string,  change_comm(R1, Name, "", Env, NewEnv).
-evaluator_comm(t_variable_declaration_command(Type, t_variable_name(Name)), Env, NewEnv) :- eval_variable_type(Type, Env, R1), R1 = bool,  change_comm(R1, Name, false, Env, NewEnv).
+evaluator_comm(t_variable_declaration_command(Type, t_variable_name(Name)), Env, NewEnv) :- evaluator_var_type(Type, Env, R1), R1 = int,  change_comm(R1, Name, 0, Env, NewEnv).
+evaluator_comm(t_variable_declaration_command(Type, t_variable_name(Name)), Env, NewEnv) :- evaluator_var_type(Type, Env, R1), R1 = float,  change_comm(R1, Name, 0.0, Env, NewEnv).
+evaluator_comm(t_variable_declaration_command(Type, t_variable_name(Name)), Env, NewEnv) :- evaluator_var_type(Type, Env, R1), R1 = string,  change_comm(R1, Name, "", Env, NewEnv).
+evaluator_comm(t_variable_declaration_command(Type, t_variable_name(Name)), Env, NewEnv) :- evaluator_var_type(Type, Env, R1), R1 = bool,  change_comm(R1, Name, false, Env, NewEnv).
 
 evaluator_comm(t_print_expression(Expression), Env, Env) :- evaluator_expr(Expression, Env, Result), write(Result), nl.
 evaluator_comm(t_print_string(String), Env, Env) :- write(String), nl.
@@ -117,20 +117,20 @@ eval_else_part(t_else(Block), Env, NewEnv, true) :-
 eval_condition(t_condition(Expression1, Operator, Expression2), Env, Result) :-
     evaluator_expr(Expression1, Env, R1),
     evaluator_expr(Expression2, Env, R2),
-    eval_comparison(R1, Operator, R2, Result).
+    evaluator_comparators(R1, Operator, R2, Result).
 
-eval_comparison(V1, t_comparison_operator(>), V2, true)  :- V1 > V2.
-eval_comparison(V1, t_comparison_operator(>), V2, false)  :- V1 =< V2.
-eval_comparison(V1, t_comparison_operator(<), V2, true)  :- V1 < V2.
-eval_comparison(V1, t_comparison_operator(<), V2, false)  :- V1 >= V2.
-eval_comparison(V1, t_comparison_operator(>=), V2, true)  :- V1 >= V2.
-eval_comparison(V1, t_comparison_operator(>=), V2, false) :- V1 < V2.
-eval_comparison(V1, t_comparison_operator(=<), V2, true)  :- V1 =< V2.
-eval_comparison(V1, t_comparison_operator(=<), V2, false) :- V1 > V2.
-eval_comparison(V1, t_comparison_operator(==), V2, true)  :- V1 =:= V2.
-eval_comparison(V1, t_comparison_operator(==), V2, false) :- V1 =\= V2.
-eval_comparison(V1, t_comparison_operator('!='), V2, true)  :- V1 =\= V2.
-eval_comparison(V1, t_comparison_operator('!='), V2, false) :- V1 =:= V2.
+evaluator_comparators(V1, t_comparison_operator(>), V2, true)  :- V1 > V2.
+evaluator_comparators(V1, t_comparison_operator(>), V2, false)  :- V1 =< V2.
+evaluator_comparators(V1, t_comparison_operator(<), V2, true)  :- V1 < V2.
+evaluator_comparators(V1, t_comparison_operator(<), V2, false)  :- V1 >= V2.
+evaluator_comparators(V1, t_comparison_operator(>=), V2, true)  :- V1 >= V2.
+evaluator_comparators(V1, t_comparison_operator(>=), V2, false) :- V1 < V2.
+evaluator_comparators(V1, t_comparison_operator(=<), V2, true)  :- V1 =< V2.
+evaluator_comparators(V1, t_comparison_operator(=<), V2, false) :- V1 > V2.
+evaluator_comparators(V1, t_comparison_operator(==), V2, true)  :- V1 =:= V2.
+evaluator_comparators(V1, t_comparison_operator(==), V2, false) :- V1 =\= V2.
+evaluator_comparators(V1, t_comparison_operator('!='), V2, true)  :- V1 =\= V2.
+evaluator_comparators(V1, t_comparison_operator('!='), V2, false) :- V1 =:= V2.
 
 evaluator_expr(t_expression(X), Env, Result) :- evaluator_expr(X, Env, Result).
 evaluator_expr(t_add(X, Y), Env, Result) :- evaluator_expr(X, Env, R1), evaluator_expr(Y, Env, R2), Result is R1+R2.
@@ -170,7 +170,7 @@ eval_boolean(true , or , false , true).
 eval_boolean(false , or , true  , true).
 eval_boolean(false , or , false , false).
 
-eval_variable_type(t_variable_type(Type), _, Type).
+evaluator_var_type(t_variable_type(Type), _, Type).
 
 %%%%%%%%%%%%%%%
 % Environment %
