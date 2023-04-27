@@ -168,3 +168,32 @@ dec_expression(t_after_decrement(Variable)) --> var_name(Variable), [--].
 dec_expression(t_before_decrement(Variable)) --> [--], var_name(Variable).
 inc_expression(t_after_increment(Variable)) --> var_name(Variable), [++].
 inc_expression(t_before_increment(Variable)) --> [++], var_name(Variable).    
+
+/* CHECKS */
+/* Verify if variable name is not a keyword */
+var_name(t_var_name(Variable), [Variable | Tail], Tail) :-
+    element(Variable), not_keyword(Variable).
+
+not_keyword(Variable) :-
+    not(member(Variable, [int, float, bool, string, true, false, for,
+    if, elif, else, while, range, and, or, not, in, range, <, >, <=, >=, ==,
+    '!=', ++, --, +, -, *, /])).
+
+var_type(t_var_type(Head), [Head | T], T) :-
+    member(Head, [int, float, bool, string]).
+
+comp_operator(t_comp_operator(Head), [Head | T], T) :-
+    member(Head, [<, >, <=, >=, ==, '!=']).
+
+integer_val(t_integer(Variable), [Variable | Tail], Tail) :- integer(Variable).
+float_val(t_float(Variable), [Variable | Tail], Tail) :- float(Variable).
+string_val(t_string(Variable), [Variable | Tail], Tail) :- string(Variable).
+boolean_val(t_boolean(Value), [Value | Tail], Tail) :- member(Value, [true, false]).
+
+assignment_operator(t_assignment_operator) --> [=].
+end_of_statement(t_end_of_statement) --> [;].
+
+boolean_operator(t_boolean_operator(Operator), [Operator | Tail], Tail) :-
+    member(Operator, [and, or, not]).
+
+    
