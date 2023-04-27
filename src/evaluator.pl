@@ -14,11 +14,11 @@ evaluator_comm_list(t_command(Command), Env, NewEnv) :-
 eval_block(t_block(CommandList), Env, NewEnv) :- evaluator_comm_list(CommandList, Env, NewEnv).
 
 evaluator_comm(t_assignment_expression(t_variable_name(Name), Expression), Env, NewEnv) :-
-    eval_expression(Expression, Env, R1),
+    evaluator_expr(Expression, Env, R1),
     change_comm(Name, R1, Env, NewEnv).
 evaluator_comm(t_variable_declaration_command(Type, t_variable_name(Name), Expression), Env, NewEnv) :-
     eval_variable_type(Type, Env, R1),
-    eval_expression(Expression, Env, R2),
+    evaluator_expr(Expression, Env, R2),
     change_comm(R1, Name, R2, Env, NewEnv).
 
 evaluator_comm(t_variable_declaration_command(Type, t_variable_name(Name)), Env, NewEnv) :- eval_variable_type(Type, Env, R1), R1 = int,  change_comm(R1, Name, 0, Env, NewEnv).
@@ -26,7 +26,7 @@ evaluator_comm(t_variable_declaration_command(Type, t_variable_name(Name)), Env,
 evaluator_comm(t_variable_declaration_command(Type, t_variable_name(Name)), Env, NewEnv) :- eval_variable_type(Type, Env, R1), R1 = string,  change_comm(R1, Name, "", Env, NewEnv).
 evaluator_comm(t_variable_declaration_command(Type, t_variable_name(Name)), Env, NewEnv) :- eval_variable_type(Type, Env, R1), R1 = bool,  change_comm(R1, Name, false, Env, NewEnv).
 
-evaluator_comm(t_print_expression(Expression), Env, Env) :- eval_expression(Expression, Env, Result), write(Result), nl.
+evaluator_comm(t_print_expression(Expression), Env, Env) :- evaluator_expr(Expression, Env, Result), write(Result), nl.
 evaluator_comm(t_print_string(String), Env, Env) :- write(String), nl.
 
 evaluator_comm(t_for_loop_command(Assignment, Condition, Variable_Change, Block), Env, NewEnv) :-
@@ -72,25 +72,25 @@ eval_for_command(Condition, _, _, Env, Env) :-
 eval_for_command(Condition, t_pre_increment(Variable), Block, Env, NewEnv) :-
     eval_condition(Condition, Env, true),
     eval_block(Block, Env, E1),
-    eval_expression(t_increment(Variable), E1, E2),
+    evaluator_expr(t_increment(Variable), E1, E2),
     eval_for_command(Condition, t_pre_increment(Variable), Block, E2, NewEnv).
 
 eval_for_command(Condition, t_pre_decrement(Variable), Block, Env, NewEnv) :-
     eval_condition(Condition, Env, true),
     eval_block(Block, Env, E1),
-    eval_expression(t_decrement(Variable), E1, E2),
+    evaluator_expr(t_decrement(Variable), E1, E2),
     eval_for_command(Condition, t_pre_decrement(Variable), Block, E2, NewEnv).
 
 eval_for_command(Condition, t_post_decrement(Variable), Block, Env, NewEnv) :-
     eval_condition(Condition, Env, true),
     eval_block(Block, Env, E1),
-    eval_expression(t_decrement(Variable), E1, E2),
+    evaluator_expr(t_decrement(Variable), E1, E2),
     eval_for_command(Condition, t_post_decrement(Variable), Block, E2, NewEnv).
 
 eval_for_command(Condition, t_post_increment(Variable), Block, Env, NewEnv) :-
     eval_condition(Condition, Env, true),
     eval_block(Block, Env, E1),
-    eval_expression(t_increment(Variable), E1, E2),
+    evaluator_expr(t_increment(Variable), E1, E2),
     eval_for_command(Condition, t_post_increment(Variable), Block, E2, NewEnv).
 
 eval_if_part(t_if(Condition, Block), Env, NewEnv, true) :-
@@ -115,8 +115,8 @@ eval_else_part(t_else(Block), Env, NewEnv, true) :-
     eval_block(Block, Env, NewEnv).
 
 eval_condition(t_condition(Expression1, Operator, Expression2), Env, Result) :-
-    eval_expression(Expression1, Env, R1),
-    eval_expression(Expression2, Env, R2),
+    evaluator_expr(Expression1, Env, R1),
+    evaluator_expr(Expression2, Env, R2),
     eval_comparison(R1, Operator, R2, Result).
 
 eval_comparison(V1, t_comparison_operator(>), V2, true)  :- V1 > V2.
@@ -132,33 +132,33 @@ eval_comparison(V1, t_comparison_operator(==), V2, false) :- V1 =\= V2.
 eval_comparison(V1, t_comparison_operator('!='), V2, true)  :- V1 =\= V2.
 eval_comparison(V1, t_comparison_operator('!='), V2, false) :- V1 =:= V2.
 
-eval_expression(t_expression(X), Env, Result) :- eval_expression(X, Env, Result).
-eval_expression(t_add(X, Y), Env, Result) :- eval_expression(X, Env, R1), eval_expression(Y, Env, R2), Result is R1+R2.
-eval_expression(t_sub(X, Y), Env, Result) :- eval_expression(X, Env, R1), eval_expression(Y, Env, R2), Result is R1-R2.
-eval_expression(t_multiply(X, Y), Env, Result) :- eval_expression(X, Env, R1), eval_expression(Y, Env, R2), Result is R1*R2.
-eval_expression(t_divide(X, Y), Env, Result) :- eval_expression(X, Env, R1), eval_expression(Y, Env, R2), Result is R1/R2.
-eval_expression(t_boolean(Variable), _, Variable).
-eval_expression(t_integer(Variable), _, Variable).
-eval_expression(t_float(Variable) , _, Variable).
-eval_expression(t_string(Variable) , _, Variable).
-eval_expression(t_variable_name(Name), Env, Value) :- lookup(Name, Value, Env).
-eval_expression(t_variable_name(Name), Env, Name) :- not(lookup(Name, _, Env)), string(Name).
-eval_expression(t_increment(t_variable_name(VariableName)), Env, NewEnv) :- lookup(VariableName, Result, Env), NewValue is Result+1, change_comm(VariableName, NewValue, Env, NewEnv).
-eval_expression(t_decrement(t_variable_name(VariableName)), Env, NewEnv) :- lookup(VariableName, Result, Env), NewValue is Result-1, change_comm(VariableName, NewValue, Env, NewEnv).
-eval_expression(t_increment(Variable), Env, NewEnv) :- lookup(Variable, Result, Env), NewValue is Result+1, change_comm(Variable, NewValue, Env, NewEnv).
-eval_expression(t_decrement(Variable), Env, NewEnv) :- lookup(Variable, Result, Env), NewValue is Result-1, change_comm(Variable, NewValue, Env, NewEnv).
+evaluator_expr(t_expression(X), Env, Result) :- evaluator_expr(X, Env, Result).
+evaluator_expr(t_add(X, Y), Env, Result) :- evaluator_expr(X, Env, R1), evaluator_expr(Y, Env, R2), Result is R1+R2.
+evaluator_expr(t_sub(X, Y), Env, Result) :- evaluator_expr(X, Env, R1), evaluator_expr(Y, Env, R2), Result is R1-R2.
+evaluator_expr(t_multiply(X, Y), Env, Result) :- evaluator_expr(X, Env, R1), evaluator_expr(Y, Env, R2), Result is R1*R2.
+evaluator_expr(t_divide(X, Y), Env, Result) :- evaluator_expr(X, Env, R1), evaluator_expr(Y, Env, R2), Result is R1/R2.
+evaluator_expr(t_boolean(Variable), _, Variable).
+evaluator_expr(t_integer(Variable), _, Variable).
+evaluator_expr(t_float(Variable) , _, Variable).
+evaluator_expr(t_string(Variable) , _, Variable).
+evaluator_expr(t_variable_name(Name), Env, Value) :- lookup(Name, Value, Env).
+evaluator_expr(t_variable_name(Name), Env, Name) :- not(lookup(Name, _, Env)), string(Name).
+evaluator_expr(t_increment(t_variable_name(VariableName)), Env, NewEnv) :- lookup(VariableName, Result, Env), NewValue is Result+1, change_comm(VariableName, NewValue, Env, NewEnv).
+evaluator_expr(t_decrement(t_variable_name(VariableName)), Env, NewEnv) :- lookup(VariableName, Result, Env), NewValue is Result-1, change_comm(VariableName, NewValue, Env, NewEnv).
+evaluator_expr(t_increment(Variable), Env, NewEnv) :- lookup(Variable, Result, Env), NewValue is Result+1, change_comm(Variable, NewValue, Env, NewEnv).
+evaluator_expr(t_decrement(Variable), Env, NewEnv) :- lookup(Variable, Result, Env), NewValue is Result-1, change_comm(Variable, NewValue, Env, NewEnv).
 
-eval_expression(t_ternary_expression(Condition, TrueExpression, _), Env, Result) :-
+evaluator_expr(t_ternary_expression(Condition, TrueExpression, _), Env, Result) :-
     eval_condition(Condition, Env, true),
-    eval_expression(TrueExpression, Env, Result).
+    evaluator_expr(TrueExpression, Env, Result).
 
-eval_expression(t_ternary_expression(Condition, _, FalseExpression), Env, Result) :-
+evaluator_expr(t_ternary_expression(Condition, _, FalseExpression), Env, Result) :-
     eval_condition(Condition, Env, false),
-    eval_expression(FalseExpression, Env, Result).
+    evaluator_expr(FalseExpression, Env, Result).
 
-eval_expression(t_boolean_expression(X, t_boolean_operator(Operator), Y), Env, Result) :-
-    eval_expression(X, Env, R1),
-    eval_expression(Y, Env, R2),
+evaluator_expr(t_boolean_expression(X, t_boolean_operator(Operator), Y), Env, Result) :-
+    evaluator_expr(X, Env, R1),
+    evaluator_expr(Y, Env, R2),
     eval_boolean(R1,  Operator, R2, Result).
 
 eval_boolean(true , and, true  , true).
@@ -220,13 +220,13 @@ error_undeclared(Name) :- error('Error: ~w Undeclared', [Name]).
 ?- change_comm(int, x, 5, [], [(int, x, 5)]).
 ?- change_comm(int, x, 5, [(int, y, 6)], [(int, y, 6), (int, x, 5)]).
 
-?- eval_expression(t_add(t_integer(3), t_integer(5)), [], 8).
-?- eval_expression(t_sub(t_integer(3), t_integer(5)), [], -2).
-?- eval_expression(t_multiply(t_integer(3), t_integer(5)), [], 15).
-?- eval_expression(t_divide(t_integer(3), t_integer(6)), [], 0.5).
+?- evaluator_expr(t_add(t_integer(3), t_integer(5)), [], 8).
+?- evaluator_expr(t_sub(t_integer(3), t_integer(5)), [], -2).
+?- evaluator_expr(t_multiply(t_integer(3), t_integer(5)), [], 15).
+?- evaluator_expr(t_divide(t_integer(3), t_integer(6)), [], 0.5).
 
-?- not(eval_expression(t_variable_name(x), [], _)).
-?- eval_expression(t_variable_name("String"), [], "String").
+?- not(evaluator_expr(t_variable_name(x), [], _)).
+?- evaluator_expr(t_variable_name("String"), [], "String").
 
 ?- eval_condition(t_condition(t_variable_name(x), t_comparison_operator(>),  t_integer(4)), [(int, x, 6)], true).
 ?- eval_condition(t_condition(t_variable_name(x), t_comparison_operator(<),  t_integer(4)), [(int, x, 2)], true).
