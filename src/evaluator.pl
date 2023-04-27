@@ -141,12 +141,12 @@ evaluator_expr(t_boolean(Variable), _, Variable).
 evaluator_expr(t_integer(Variable), _, Variable).
 evaluator_expr(t_float(Variable) , _, Variable).
 evaluator_expr(t_string(Variable) , _, Variable).
-evaluator_expr(t_variable_name(Name), Env, Value) :- lookup(Name, Value, Env).
-evaluator_expr(t_variable_name(Name), Env, Name) :- not(lookup(Name, _, Env)), string(Name).
-evaluator_expr(t_increment(t_variable_name(VariableName)), Env, NewEnv) :- lookup(VariableName, Result, Env), NewValue is Result+1, change_comm(VariableName, NewValue, Env, NewEnv).
-evaluator_expr(t_decrement(t_variable_name(VariableName)), Env, NewEnv) :- lookup(VariableName, Result, Env), NewValue is Result-1, change_comm(VariableName, NewValue, Env, NewEnv).
-evaluator_expr(t_increment(Variable), Env, NewEnv) :- lookup(Variable, Result, Env), NewValue is Result+1, change_comm(Variable, NewValue, Env, NewEnv).
-evaluator_expr(t_decrement(Variable), Env, NewEnv) :- lookup(Variable, Result, Env), NewValue is Result-1, change_comm(Variable, NewValue, Env, NewEnv).
+evaluator_expr(t_variable_name(Name), Env, Value) :- seek(Name, Value, Env).
+evaluator_expr(t_variable_name(Name), Env, Name) :- not(seek(Name, _, Env)), string(Name).
+evaluator_expr(t_increment(t_variable_name(VariableName)), Env, NewEnv) :- seek(VariableName, Result, Env), NewValue is Result+1, change_comm(VariableName, NewValue, Env, NewEnv).
+evaluator_expr(t_decrement(t_variable_name(VariableName)), Env, NewEnv) :- seek(VariableName, Result, Env), NewValue is Result-1, change_comm(VariableName, NewValue, Env, NewEnv).
+evaluator_expr(t_increment(Variable), Env, NewEnv) :- seek(Variable, Result, Env), NewValue is Result+1, change_comm(Variable, NewValue, Env, NewEnv).
+evaluator_expr(t_decrement(Variable), Env, NewEnv) :- seek(Variable, Result, Env), NewValue is Result-1, change_comm(Variable, NewValue, Env, NewEnv).
 
 evaluator_expr(t_ternary_expression(Condition, TrueExpression, _), Env, Result) :-
     eval_condition(Condition, Env, true),
@@ -176,9 +176,9 @@ evaluator_var_type(t_variable_type(Type), _, Type).
 % Environment %
 %%%%%%%%%%%%%%%
 
-% lookup(Name, Value, Env)
-lookup(Name, Value, [(_, Name, Value) | _]).
-lookup(Name, Value, [_Head | Tail]) :- lookup(Name, Value, Tail).
+% seek(Name, Value, Env)
+seek(Name, Value, [(_, Name, Value) | _]).
+seek(Name, Value, [_Head | Tail]) :- seek(Name, Value, Tail).
 
 % change_comm(Name, Value, Env, NewEnv)
 change_comm(Name, _, [], []) :- error_undeclared(Name).
