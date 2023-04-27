@@ -17,7 +17,7 @@ end_of_statement --> [‘;’].
 inc_operator --> ['++'].
 dec_operator --> ['--'].
 
-comp_operators --> ['<'], ['>'], ['<='], ['>='], ['=='], ['!='].
+comp_operator --> ['<'], ['>'], ['<='], ['>='], ['=='], ['!='].
 
 ternary_operator --> ['?']
 
@@ -80,7 +80,7 @@ var_change_part --> inc_expression.
 var_change_part --> dec_expression.
 var_change_part --> var_name, assignment_operator, expression.
 
-condition --> expression, comp_operators, expression.
+condition --> expression, comp_operator, expression.
 
 inc_expression --> var_name, inc_operator.
 inc_expression --> inc_operator, var_name.
@@ -98,11 +98,11 @@ expression --> ['('], expression, [')'], operator, expression.
 
 ternary_expression --> ['('], condition, [')'], ['?'], expression, [':'], expression.
 
-value --> float | integer | bool_val | string_val | var_name.
+value --> float_val | integer_val | bool_val | string_val | var_name.
 
-boolean_operators --> and_operator | or_operator | not_operator.
+boolean_operator --> and_operator | or_operator | not_operator.
 
-operators --> ['+'] | ['-'] | ['*'] | ['/'] | boolean_operators.
+operator --> ['+'] | ['-'] | ['*'] | ['/'] | boolean_operator.
 
 assign_statement --> var_name, assignment_operator, expression, end_of_statement.
 
