@@ -1,3 +1,6 @@
+:- module(program, [program/3]).
+:- table expr_level_1/3, expr_level_2/3, expr_level_3/3.
+
 /* Start Symbol */
 program(t_program(P)) --> statement_list(P).
 
@@ -122,3 +125,46 @@ condition(t_condition(Expression1, Comp_Operator, Expression2)) -->
     expression(Expression1),
     comp_operator(Comp_Operator),
     expression(Expression2).
+
+/* EXPRESSIONS (HIGHER THE LEVEL OF EXPRESSION, HIGHER THE PRECEDENCE OF OPERATOR) */
+expression(t_expression(Expression)) --> expr_level_1(Expression).
+
+expr_level_1(t_add(X, Y)) --> expr_level_1(X), [+], expr_level_2(Y).
+expr_level_1(t_sub(X, Y)) --> expr_level_1(X), [-], expr_level_2(Y).
+expr_level_1(X) --> expr_level_2(X).
+
+expr_level_2(t_multiply(X, Y)) --> expr_level_2(X), [*], expr_level_3(Y).
+expr_level_2(t_divide(X, Y)) --> expr_level_2(X), [/], expr_level_3(Y).
+expr_level_2(t_bool_expression(X, Operator, Y)) --> expression(X), boolean_operator(Operator), expression(Y).
+expr_level_2(X) --> expr_level_3(X).
+
+expr_level_3(X) --> ['('], expression(X), [')'].
+expr_level_3(X) -->
+    ternary_expression(X) |
+    var_name(X) |
+    value(X).
+
+ternary_expression(t_ternary_expression(Condition, TrueExpression, FalseExpression)) -->
+    ['('],
+    condition(Condition),
+    ['?'],
+    expression(TrueExpression),
+    [':'],
+    expression(FalseExpression),
+    [')'].
+
+assignment_expression(t_assignment_expression(Name, Expression)) -->
+    var_name(Name),
+    assignment_operator(_),
+    expression(Expression).
+
+value(Variable) -->
+    integer_val(Variable) |
+    float_val(Variable) |
+    string_val(Variable) |
+    boolean_val(Variable).
+
+dec_expression(t_after_decrement(Variable)) --> var_name(Variable), [--].
+dec_expression(t_before_decrement(Variable)) --> [--], var_name(Variable).
+inc_expression(t_after_increment(Variable)) --> var_name(Variable), [++].
+inc_expression(t_before_increment(Variable)) --> [++], var_name(Variable).    

@@ -98,7 +98,7 @@ expression --> ['('], expression, [')'], operator, expression.
 
 ternary_expression --> ['('], condition, [')'], ['?'], expression, [':'], expression.
 
-value --> float | integer | bool_val | string_val | var_name.
+value --> float_val | integer_val | bool_val | string_val | var_name.
 
 boolean_operator --> and_operator | or_operator | not_operator.
 
