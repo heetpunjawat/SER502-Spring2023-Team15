@@ -15,16 +15,16 @@ eval_block(t_block(CommandList), Env, NewEnv) :- evaluator_comm_list(CommandList
 
 evaluator_comm(t_assignment_expression(t_variable_name(Name), Expression), Env, NewEnv) :-
     eval_expression(Expression, Env, R1),
-    update(Name, R1, Env, NewEnv).
+    change_comm(Name, R1, Env, NewEnv).
 evaluator_comm(t_variable_declaration_command(Type, t_variable_name(Name), Expression), Env, NewEnv) :-
     eval_variable_type(Type, Env, R1),
     eval_expression(Expression, Env, R2),
-    update(R1, Name, R2, Env, NewEnv).
+    change_comm(R1, Name, R2, Env, NewEnv).
 
-evaluator_comm(t_variable_declaration_command(Type, t_variable_name(Name)), Env, NewEnv) :- eval_variable_type(Type, Env, R1), R1 = int,  update(R1, Name, 0, Env, NewEnv).
-evaluator_comm(t_variable_declaration_command(Type, t_variable_name(Name)), Env, NewEnv) :- eval_variable_type(Type, Env, R1), R1 = float,  update(R1, Name, 0.0, Env, NewEnv).
-evaluator_comm(t_variable_declaration_command(Type, t_variable_name(Name)), Env, NewEnv) :- eval_variable_type(Type, Env, R1), R1 = string,  update(R1, Name, "", Env, NewEnv).
-evaluator_comm(t_variable_declaration_command(Type, t_variable_name(Name)), Env, NewEnv) :- eval_variable_type(Type, Env, R1), R1 = bool,  update(R1, Name, false, Env, NewEnv).
+evaluator_comm(t_variable_declaration_command(Type, t_variable_name(Name)), Env, NewEnv) :- eval_variable_type(Type, Env, R1), R1 = int,  change_comm(R1, Name, 0, Env, NewEnv).
+evaluator_comm(t_variable_declaration_command(Type, t_variable_name(Name)), Env, NewEnv) :- eval_variable_type(Type, Env, R1), R1 = float,  change_comm(R1, Name, 0.0, Env, NewEnv).
+evaluator_comm(t_variable_declaration_command(Type, t_variable_name(Name)), Env, NewEnv) :- eval_variable_type(Type, Env, R1), R1 = string,  change_comm(R1, Name, "", Env, NewEnv).
+evaluator_comm(t_variable_declaration_command(Type, t_variable_name(Name)), Env, NewEnv) :- eval_variable_type(Type, Env, R1), R1 = bool,  change_comm(R1, Name, false, Env, NewEnv).
 
 evaluator_comm(t_print_expression(Expression), Env, Env) :- eval_expression(Expression, Env, Result), write(Result), nl.
 evaluator_comm(t_print_string(String), Env, Env) :- write(String), nl.
@@ -143,10 +143,10 @@ eval_expression(t_float(Variable) , _, Variable).
 eval_expression(t_string(Variable) , _, Variable).
 eval_expression(t_variable_name(Name), Env, Value) :- lookup(Name, Value, Env).
 eval_expression(t_variable_name(Name), Env, Name) :- not(lookup(Name, _, Env)), string(Name).
-eval_expression(t_increment(t_variable_name(VariableName)), Env, NewEnv) :- lookup(VariableName, Result, Env), NewValue is Result+1, update(VariableName, NewValue, Env, NewEnv).
-eval_expression(t_decrement(t_variable_name(VariableName)), Env, NewEnv) :- lookup(VariableName, Result, Env), NewValue is Result-1, update(VariableName, NewValue, Env, NewEnv).
-eval_expression(t_increment(Variable), Env, NewEnv) :- lookup(Variable, Result, Env), NewValue is Result+1, update(Variable, NewValue, Env, NewEnv).
-eval_expression(t_decrement(Variable), Env, NewEnv) :- lookup(Variable, Result, Env), NewValue is Result-1, update(Variable, NewValue, Env, NewEnv).
+eval_expression(t_increment(t_variable_name(VariableName)), Env, NewEnv) :- lookup(VariableName, Result, Env), NewValue is Result+1, change_comm(VariableName, NewValue, Env, NewEnv).
+eval_expression(t_decrement(t_variable_name(VariableName)), Env, NewEnv) :- lookup(VariableName, Result, Env), NewValue is Result-1, change_comm(VariableName, NewValue, Env, NewEnv).
+eval_expression(t_increment(Variable), Env, NewEnv) :- lookup(Variable, Result, Env), NewValue is Result+1, change_comm(Variable, NewValue, Env, NewEnv).
+eval_expression(t_decrement(Variable), Env, NewEnv) :- lookup(Variable, Result, Env), NewValue is Result-1, change_comm(Variable, NewValue, Env, NewEnv).
 
 eval_expression(t_ternary_expression(Condition, TrueExpression, _), Env, Result) :-
     eval_condition(Condition, Env, true),
@@ -180,24 +180,24 @@ eval_variable_type(t_variable_type(Type), _, Type).
 lookup(Name, Value, [(_, Name, Value) | _]).
 lookup(Name, Value, [_Head | Tail]) :- lookup(Name, Value, Tail).
 
-% update(Name, Value, Env, NewEnv)
-update(Name, _, [], []) :- error_undeclared(Name).
-update(Name, Value, [Head | Tail], [Head | NewEnv]) :- Head \= (_, Name, _), update(Name, Value, Tail, NewEnv).
-update(Name, Value, [(int , Name, _) | Env], [ (int , Name, Value) | Env]) :- integer(Value).
-update(Name, Value, [(float , Name, _) | Env], [ (float , Name, Value) | Env]) :- float(Value).
-update(Name, Value, [(bool , Name, _) | Env], [ (bool , Name, Value) | Env]) :- member(Value, [true, false]).
-update(Name, Value, [(string, Name, _) | Env], [ (string, Name, Value) | Env]) :- string(Value).
+% change_comm(Name, Value, Env, NewEnv)
+change_comm(Name, _, [], []) :- error_undeclared(Name).
+change_comm(Name, Value, [Head | Tail], [Head | NewEnv]) :- Head \= (_, Name, _), change_comm(Name, Value, Tail, NewEnv).
+change_comm(Name, Value, [(int , Name, _) | Env], [ (int , Name, Value) | Env]) :- integer(Value).
+change_comm(Name, Value, [(float , Name, _) | Env], [ (float , Name, Value) | Env]) :- float(Value).
+change_comm(Name, Value, [(bool , Name, _) | Env], [ (bool , Name, Value) | Env]) :- member(Value, [true, false]).
+change_comm(Name, Value, [(string, Name, _) | Env], [ (string, Name, Value) | Env]) :- string(Value).
 
-% update - errors for type mismatch
-update(Name, Value, [(int , Name, _) | _], _)  :- not(integer(Value)),     error_type_conversion(Name, int).
-update(Name, Value, [(float, Name, _) | _], _)  :- not(float(Value)),     error_type_conversion(Name, float).
-update(Name, Value, [(bool , Name, _) | _], _)  :- not(member(Value, [true, false])), error_type_conversion(Name, bool).
-update(Name, Value, [(string, Name, _) | _], _) :- not(string(Value)) ,     error_type_conversion(Name, string).
+% change_comm - errors for type mismatch
+change_comm(Name, Value, [(int , Name, _) | _], _)  :- not(integer(Value)),     error_type_conversion(Name, int).
+change_comm(Name, Value, [(float, Name, _) | _], _)  :- not(float(Value)),     error_type_conversion(Name, float).
+change_comm(Name, Value, [(bool , Name, _) | _], _)  :- not(member(Value, [true, false])), error_type_conversion(Name, bool).
+change_comm(Name, Value, [(string, Name, _) | _], _) :- not(string(Value)) ,     error_type_conversion(Name, string).
 
-% update(Type, Name, Value, Env, NewEnv)
-update(Type, Name, Value, [], [(Type, Name, Value)]).
-update(Type, Name, Value, [Head | Tail], [Head | NewEnv]) :- Head \= (_, Name, _), update(Type, Name, Value, Tail, NewEnv).
-update(_, Name, _, [(_, Name, _) | _], _NewEnv) :- error_redefinition(Name).
+% change_comm(Type, Name, Value, Env, NewEnv)
+change_comm(Type, Name, Value, [], [(Type, Name, Value)]).
+change_comm(Type, Name, Value, [Head | Tail], [Head | NewEnv]) :- Head \= (_, Name, _), change_comm(Type, Name, Value, Tail, NewEnv).
+change_comm(_, Name, _, [(_, Name, _) | _], _NewEnv) :- error_redefinition(Name).
 
 %%%%%%%%%
 % ERROR %
@@ -214,11 +214,11 @@ error_undeclared(Name) :- error('Error: ~w Undeclared', [Name]).
 % TESTING %
 %%%%%%%%%%%
 
-?- update(x, 5, [(int, x, 6)], [(int, x, 5)]).
-?- update(x, 5, [(int, x, 2), (float, y, 3.4)], [(int, x, 5), (float, y, 3.4)]).
+?- change_comm(x, 5, [(int, x, 6)], [(int, x, 5)]).
+?- change_comm(x, 5, [(int, x, 2), (float, y, 3.4)], [(int, x, 5), (float, y, 3.4)]).
 
-?- update(int, x, 5, [], [(int, x, 5)]).
-?- update(int, x, 5, [(int, y, 6)], [(int, y, 6), (int, x, 5)]).
+?- change_comm(int, x, 5, [], [(int, x, 5)]).
+?- change_comm(int, x, 5, [(int, y, 6)], [(int, y, 6), (int, x, 5)]).
 
 ?- eval_expression(t_add(t_integer(3), t_integer(5)), [], 8).
 ?- eval_expression(t_sub(t_integer(3), t_integer(5)), [], -2).
