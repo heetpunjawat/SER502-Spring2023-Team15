@@ -159,16 +159,16 @@ evaluator_expr(t_ternary_expression(Condition, _, FalseExpression), Env, Result)
 evaluator_expr(t_boolean_expression(X, t_boolean_operator(Operator), Y), Env, Result) :-
     evaluator_expr(X, Env, R1),
     evaluator_expr(Y, Env, R2),
-    eval_boolean(R1,  Operator, R2, Result).
+    evaluator_bool(R1,  Operator, R2, Result).
 
-eval_boolean(true , and, true  , true).
-eval_boolean(true , and, false , false).
-eval_boolean(false , and, true  , false).
-eval_boolean(false , and, false , false).
-eval_boolean(true , or , true  , true).
-eval_boolean(true , or , false , true).
-eval_boolean(false , or , true  , true).
-eval_boolean(false , or , false , false).
+evaluator_bool(true , and, true  , true).
+evaluator_bool(true , and, false , false).
+evaluator_bool(false , and, true  , false).
+evaluator_bool(false , and, false , false).
+evaluator_bool(true , or , true  , true).
+evaluator_bool(true , or , false , true).
+evaluator_bool(false , or , true  , true).
+evaluator_bool(false , or , false , false).
 
 evaluator_var_type(t_variable_type(Type), _, Type).
 
