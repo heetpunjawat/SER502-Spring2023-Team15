@@ -31,7 +31,7 @@ evaluator_comm(t_print_string(String), Env, Env) :- write(String), nl.
 
 evaluator_comm(t_for_loop_command(Assignment, Condition, Variable_Change, Block), Env, NewEnv) :-
     evaluator_comm(Assignment, Env, E1),
-    eval_for_command(Condition, Variable_Change, Block, E1, NewEnv).
+    evaluator_for(Condition, Variable_Change, Block, E1, NewEnv).
 
 evaluator_comm(t_while_command(C, B), Env, NewEnv) :-
     eval_condition(C, Env, true),
@@ -43,12 +43,12 @@ evaluator_comm(t_while_command(C, _), Env, _) :-
 evaluator_comm(t_for_enhanced_command(Variable, Expression1, Expression2, Block), Env, NewEnv) :-
     evaluator_comm(t_assignment_expression(Variable, Expression1), Env, E1),
     eval_condition(t_condition(Expression1, t_comparison_operator(>), Expression2), E1, false),
-    eval_for_command(t_condition(Variable, t_comparison_operator(=<), Expression2), t_pre_increment(Variable), Block, E1, NewEnv).
+    evaluator_for(t_condition(Variable, t_comparison_operator(=<), Expression2), t_pre_increment(Variable), Block, E1, NewEnv).
 
 evaluator_comm(t_for_enhanced_command(Variable, Expression1, Expression2, Block), Env, NewEnv) :-
     evaluator_comm(t_assignment_expression(Variable, Expression1), Env, E1),
     eval_condition(t_condition(Expression1, t_comparison_operator(<), Expression2), E1, false),
-    eval_for_command(t_condition(Variable, t_comparison_operator(>=), Expression2), t_pre_decrement(Variable), Block, E1, NewEnv).
+    evaluator_for(t_condition(Variable, t_comparison_operator(>=), Expression2), t_pre_decrement(Variable), Block, E1, NewEnv).
 
 evaluator_comm(t_if_command(IfTree), Env, NewEnv) :- eval_if_part(IfTree, Env, NewEnv, _).
 evaluator_comm(t_if_command(IfTree, _, _), Env, NewEnv) :-
@@ -66,32 +66,32 @@ evaluator_comm(t_if_command(IfTree, ElseTree), Env, NewEnv) :-
     eval_if_part(IfTree, Env, _, false),
     eval_else_part(ElseTree, Env, NewEnv, true).
 
-eval_for_command(Condition, _, _, Env, Env) :-
+evaluator_for(Condition, _, _, Env, Env) :-
     eval_condition(Condition, Env, false).
 
-eval_for_command(Condition, t_pre_increment(Variable), Block, Env, NewEnv) :-
+evaluator_for(Condition, t_pre_increment(Variable), Block, Env, NewEnv) :-
     eval_condition(Condition, Env, true),
     eval_block(Block, Env, E1),
     evaluator_expr(t_increment(Variable), E1, E2),
-    eval_for_command(Condition, t_pre_increment(Variable), Block, E2, NewEnv).
+    evaluator_for(Condition, t_pre_increment(Variable), Block, E2, NewEnv).
 
-eval_for_command(Condition, t_pre_decrement(Variable), Block, Env, NewEnv) :-
+evaluator_for(Condition, t_pre_decrement(Variable), Block, Env, NewEnv) :-
     eval_condition(Condition, Env, true),
     eval_block(Block, Env, E1),
     evaluator_expr(t_decrement(Variable), E1, E2),
-    eval_for_command(Condition, t_pre_decrement(Variable), Block, E2, NewEnv).
+    evaluator_for(Condition, t_pre_decrement(Variable), Block, E2, NewEnv).
 
-eval_for_command(Condition, t_post_decrement(Variable), Block, Env, NewEnv) :-
+evaluator_for(Condition, t_post_decrement(Variable), Block, Env, NewEnv) :-
     eval_condition(Condition, Env, true),
     eval_block(Block, Env, E1),
     evaluator_expr(t_decrement(Variable), E1, E2),
-    eval_for_command(Condition, t_post_decrement(Variable), Block, E2, NewEnv).
+    evaluator_for(Condition, t_post_decrement(Variable), Block, E2, NewEnv).
 
-eval_for_command(Condition, t_post_increment(Variable), Block, Env, NewEnv) :-
+evaluator_for(Condition, t_post_increment(Variable), Block, Env, NewEnv) :-
     eval_condition(Condition, Env, true),
     eval_block(Block, Env, E1),
     evaluator_expr(t_increment(Variable), E1, E2),
-    eval_for_command(Condition, t_post_increment(Variable), Block, E2, NewEnv).
+    evaluator_for(Condition, t_post_increment(Variable), Block, E2, NewEnv).
 
 eval_if_part(t_if(Condition, Block), Env, NewEnv, true) :-
     eval_condition(Condition, Env, true),
