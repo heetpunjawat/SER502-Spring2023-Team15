@@ -50,20 +50,20 @@ evaluator_comm(t_for_enhanced_command(Variable, Expression1, Expression2, Block)
     eval_condition(t_condition(Expression1, t_comparison_operator(<), Expression2), E1, false),
     evaluator_for(t_condition(Variable, t_comparison_operator(>=), Expression2), t_pre_decrement(Variable), Block, E1, NewEnv).
 
-evaluator_comm(t_if_command(IfTree), Env, NewEnv) :- eval_if_part(IfTree, Env, NewEnv, _).
+evaluator_comm(t_if_command(IfTree), Env, NewEnv) :- evaluator_if(IfTree, Env, NewEnv, _).
 evaluator_comm(t_if_command(IfTree, _, _), Env, NewEnv) :-
-    eval_if_part(IfTree, Env, NewEnv, true).
+    evaluator_if(IfTree, Env, NewEnv, true).
 evaluator_comm(t_if_command(IfTree, ElifTree, _), Env, NewEnv) :-
-    eval_if_part(IfTree, Env, _, false),
+    evaluator_if(IfTree, Env, _, false),
     eval_elif_part(ElifTree, Env, NewEnv, true).
 evaluator_comm(t_if_command(IfTree, ElifTree, ElseTree), Env, NewEnv) :-
-    eval_if_part(IfTree, Env, _, false),
+    evaluator_if(IfTree, Env, _, false),
     eval_elif_part(ElifTree, Env, _, false),
     eval_else_part(ElseTree, Env, NewEnv, true).
 evaluator_comm(t_if_command(IfTree, _), Env, NewEnv) :-
-    eval_if_part(IfTree, Env, NewEnv, true).
+    evaluator_if(IfTree, Env, NewEnv, true).
 evaluator_comm(t_if_command(IfTree, ElseTree), Env, NewEnv) :-
-    eval_if_part(IfTree, Env, _, false),
+    evaluator_if(IfTree, Env, _, false),
     eval_else_part(ElseTree, Env, NewEnv, true).
 
 evaluator_for(Condition, _, _, Env, Env) :-
@@ -93,10 +93,10 @@ evaluator_for(Condition, t_post_increment(Variable), Block, Env, NewEnv) :-
     evaluator_expr(t_increment(Variable), E1, E2),
     evaluator_for(Condition, t_post_increment(Variable), Block, E2, NewEnv).
 
-eval_if_part(t_if(Condition, Block), Env, NewEnv, true) :-
+evaluator_if(t_if(Condition, Block), Env, NewEnv, true) :-
     eval_condition(Condition, Env, true),
     eval_block(Block, Env, NewEnv).
-eval_if_part(t_if(Condition, _), Env, Env, false) :-
+evaluator_if(t_if(Condition, _), Env, Env, false) :-
     eval_condition(Condition, Env, false).
 
 eval_elif_part(t_elif(Condition, Block), Env, NewEnv, true) :-
