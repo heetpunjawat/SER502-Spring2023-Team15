@@ -119,18 +119,18 @@ evaluator_condition(t_condition(Expression1, Operator, Expression2), Env, Result
     evaluator_expr(Expression2, Env, R2),
     evaluator_comparators(R1, Operator, R2, Result).
 
-evaluator_comparators(V1, compare_op_m(>), V2, true)  :- V1 > V2.
-evaluator_comparators(V1, compare_op_m(>), V2, false)  :- V1 =< V2.
-evaluator_comparators(V1, compare_op_m(<), V2, true)  :- V1 < V2.
-evaluator_comparators(V1, compare_op_m(<), V2, false)  :- V1 >= V2.
-evaluator_comparators(V1, compare_op_m(>=), V2, true)  :- V1 >= V2.
-evaluator_comparators(V1, compare_op_m(>=), V2, false) :- V1 < V2.
-evaluator_comparators(V1, compare_op_m(=<), V2, true)  :- V1 =< V2.
-evaluator_comparators(V1, compare_op_m(=<), V2, false) :- V1 > V2.
-evaluator_comparators(V1, compare_op_m(==), V2, true)  :- V1 =:= V2.
-evaluator_comparators(V1, compare_op_m(==), V2, false) :- V1 =\= V2.
-evaluator_comparators(V1, compare_op_m('!='), V2, true)  :- V1 =\= V2.
-evaluator_comparators(V1, compare_op_m('!='), V2, false) :- V1 =:= V2.
+evaluator_comparators(S1, compare_op_m(>), S2, true)  :- S1 > S2.
+evaluator_comparators(S1, compare_op_m(>), S2, false)  :- S1 =< S2.
+evaluator_comparators(S1, compare_op_m(<), S2, true)  :- S1 < S2.
+evaluator_comparators(S1, compare_op_m(<), S2, false)  :- S1 >= S2.
+evaluator_comparators(S1, compare_op_m(>=), S2, true)  :- S1 >= S2.
+evaluator_comparators(S1, compare_op_m(>=), S2, false) :- S1 < S2.
+evaluator_comparators(S1, compare_op_m(=<), S2, true)  :- S1 =< S2.
+evaluator_comparators(S1, compare_op_m(=<), S2, false) :- S1 > S2.
+evaluator_comparators(S1, compare_op_m(==), S2, true)  :- S1 =:= S2.
+evaluator_comparators(S1, compare_op_m(==), S2, false) :- S1 =\= S2.
+evaluator_comparators(S1, compare_op_m('!='), S2, true)  :- S1 =\= S2.
+evaluator_comparators(S1, compare_op_m('!='), S2, false) :- S1 =:= S2.
 
 evaluator_expr(t_expression(X), Env, Result) :- evaluator_expr(X, Env, Result).
 evaluator_expr(t_add(X, Y), Env, Result) :- evaluator_expr(X, Env, R1), evaluator_expr(Y, Env, R2), Result is R1+R2.
