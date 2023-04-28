@@ -92,22 +92,22 @@ evaluator_for(Condition, t_after_increment(Variable), Block, Env, NewEnv) :-
     evaluator_expr(t_increment(Variable), E1, E2),
     evaluator_for(Condition, t_after_increment(Variable), Block, E2, NewEnv).
 
-evaluator_if(t_if(Condition, Block), Env, NewEnv, true) :-
+evaluator_if(if_m(Condition, Block), Env, NewEnv, true) :-
     evaluator_condition(Condition, Env, true),
     eval_block(Block, Env, NewEnv).
-evaluator_if(t_if(Condition, _), Env, Env, false) :-
+evaluator_if(if_m(Condition, _), Env, Env, false) :-
     evaluator_condition(Condition, Env, false).
 
-evaluator_elif(t_elif(Condition, Block), Env, NewEnv, true) :-
+evaluator_elif(elif_m(Condition, Block), Env, NewEnv, true) :-
     evaluator_condition(Condition, Env, true),
     eval_block(Block, Env, NewEnv).
-evaluator_elif(t_elif(Condition, Block, _), Env, NewEnv, true) :-
+evaluator_elif(elif_m(Condition, Block, _), Env, NewEnv, true) :-
     evaluator_condition(Condition, Env, true),
     eval_block(Block, Env, NewEnv).
-evaluator_elif(t_elif(Condition, _, ElifPart), Env, NewEnv, R) :-
+evaluator_elif(elif_m(Condition, _, ElifPart), Env, NewEnv, R) :-
     evaluator_condition(Condition, Env, false),
     evaluator_elif(ElifPart, Env, NewEnv, R).
-evaluator_elif(t_elif(Condition, _, _), Env, Env, false) :-
+evaluator_elif(elif_m(Condition, _, _), Env, Env, false) :-
     evaluator_condition(Condition, Env, false).
 
 evaluator_else(t_else(Block), Env, NewEnv, true) :-
