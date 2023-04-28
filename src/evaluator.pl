@@ -59,12 +59,12 @@ evaluator_comm(t_if_command(IfTree, ElifTree, _), Env, NewEnv) :-
 evaluator_comm(t_if_command(IfTree, ElifTree, ElseTree), Env, NewEnv) :-
     evaluator_if(IfTree, Env, _, false),
     evaluator_elif(ElifTree, Env, _, false),
-    eval_else_part(ElseTree, Env, NewEnv, true).
+    evaluator_else(ElseTree, Env, NewEnv, true).
 evaluator_comm(t_if_command(IfTree, _), Env, NewEnv) :-
     evaluator_if(IfTree, Env, NewEnv, true).
 evaluator_comm(t_if_command(IfTree, ElseTree), Env, NewEnv) :-
     evaluator_if(IfTree, Env, _, false),
-    eval_else_part(ElseTree, Env, NewEnv, true).
+    evaluator_else(ElseTree, Env, NewEnv, true).
 
 evaluator_for(Condition, _, _, Env, Env) :-
     eval_condition(Condition, Env, false).
@@ -111,7 +111,7 @@ evaluator_elif(t_elif(Condition, _, ElifPart), Env, NewEnv, R) :-
 evaluator_elif(t_elif(Condition, _, _), Env, Env, false) :-
     eval_condition(Condition, Env, false).
 
-eval_else_part(t_else(Block), Env, NewEnv, true) :-
+evaluator_else(t_else(Block), Env, NewEnv, true) :-
     eval_block(Block, Env, NewEnv).
 
 eval_condition(t_condition(Expression1, Operator, Expression2), Env, Result) :-
