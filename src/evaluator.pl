@@ -34,20 +34,20 @@ evaluator_comm(t_for_loop_command(Assignment, Condition, Variable_Change, Block)
     evaluator_for(Condition, Variable_Change, Block, E1, NewEnv).
 
 evaluator_comm(t_while_command(C, B), Env, NewEnv) :-
-    eval_condition(C, Env, true),
+    evaluator_condition(C, Env, true),
     eval_block(B, Env, E1),
     evaluator_comm(t_while_command(C, B), E1, NewEnv).
 evaluator_comm(t_while_command(C, _), Env, _) :-
-    eval_condition(C, Env, false).
+    evaluator_condition(C, Env, false).
 
 evaluator_comm(t_for_enhanced_command(Variable, Expression1, Expression2, Block), Env, NewEnv) :-
     evaluator_comm(t_assignment_expression(Variable, Expression1), Env, E1),
-    eval_condition(t_condition(Expression1, t_comparison_operator(>), Expression2), E1, false),
+    evaluator_condition(t_condition(Expression1, t_comparison_operator(>), Expression2), E1, false),
     evaluator_for(t_condition(Variable, t_comparison_operator(=<), Expression2), t_pre_increment(Variable), Block, E1, NewEnv).
 
 evaluator_comm(t_for_enhanced_command(Variable, Expression1, Expression2, Block), Env, NewEnv) :-
     evaluator_comm(t_assignment_expression(Variable, Expression1), Env, E1),
-    eval_condition(t_condition(Expression1, t_comparison_operator(<), Expression2), E1, false),
+    evaluator_condition(t_condition(Expression1, t_comparison_operator(<), Expression2), E1, false),
     evaluator_for(t_condition(Variable, t_comparison_operator(>=), Expression2), t_pre_decrement(Variable), Block, E1, NewEnv).
 
 evaluator_comm(t_if_command(IfTree), Env, NewEnv) :- evaluator_if(IfTree, Env, NewEnv, _).
@@ -67,54 +67,54 @@ evaluator_comm(t_if_command(IfTree, ElseTree), Env, NewEnv) :-
     evaluator_else(ElseTree, Env, NewEnv, true).
 
 evaluator_for(Condition, _, _, Env, Env) :-
-    eval_condition(Condition, Env, false).
+    evaluator_condition(Condition, Env, false).
 
 evaluator_for(Condition, t_pre_increment(Variable), Block, Env, NewEnv) :-
-    eval_condition(Condition, Env, true),
+    evaluator_condition(Condition, Env, true),
     eval_block(Block, Env, E1),
     evaluator_expr(t_increment(Variable), E1, E2),
     evaluator_for(Condition, t_pre_increment(Variable), Block, E2, NewEnv).
 
 evaluator_for(Condition, t_pre_decrement(Variable), Block, Env, NewEnv) :-
-    eval_condition(Condition, Env, true),
+    evaluator_condition(Condition, Env, true),
     eval_block(Block, Env, E1),
     evaluator_expr(t_decrement(Variable), E1, E2),
     evaluator_for(Condition, t_pre_decrement(Variable), Block, E2, NewEnv).
 
 evaluator_for(Condition, t_post_decrement(Variable), Block, Env, NewEnv) :-
-    eval_condition(Condition, Env, true),
+    evaluator_condition(Condition, Env, true),
     eval_block(Block, Env, E1),
     evaluator_expr(t_decrement(Variable), E1, E2),
     evaluator_for(Condition, t_post_decrement(Variable), Block, E2, NewEnv).
 
 evaluator_for(Condition, t_post_increment(Variable), Block, Env, NewEnv) :-
-    eval_condition(Condition, Env, true),
+    evaluator_condition(Condition, Env, true),
     eval_block(Block, Env, E1),
     evaluator_expr(t_increment(Variable), E1, E2),
     evaluator_for(Condition, t_post_increment(Variable), Block, E2, NewEnv).
 
 evaluator_if(t_if(Condition, Block), Env, NewEnv, true) :-
-    eval_condition(Condition, Env, true),
+    evaluator_condition(Condition, Env, true),
     eval_block(Block, Env, NewEnv).
 evaluator_if(t_if(Condition, _), Env, Env, false) :-
-    eval_condition(Condition, Env, false).
+    evaluator_condition(Condition, Env, false).
 
 evaluator_elif(t_elif(Condition, Block), Env, NewEnv, true) :-
-    eval_condition(Condition, Env, true),
+    evaluator_condition(Condition, Env, true),
     eval_block(Block, Env, NewEnv).
 evaluator_elif(t_elif(Condition, Block, _), Env, NewEnv, true) :-
-    eval_condition(Condition, Env, true),
+    evaluator_condition(Condition, Env, true),
     eval_block(Block, Env, NewEnv).
 evaluator_elif(t_elif(Condition, _, ElifPart), Env, NewEnv, R) :-
-    eval_condition(Condition, Env, false),
+    evaluator_condition(Condition, Env, false),
     evaluator_elif(ElifPart, Env, NewEnv, R).
 evaluator_elif(t_elif(Condition, _, _), Env, Env, false) :-
-    eval_condition(Condition, Env, false).
+    evaluator_condition(Condition, Env, false).
 
 evaluator_else(t_else(Block), Env, NewEnv, true) :-
     eval_block(Block, Env, NewEnv).
 
-eval_condition(t_condition(Expression1, Operator, Expression2), Env, Result) :-
+evaluator_condition(t_condition(Expression1, Operator, Expression2), Env, Result) :-
     evaluator_expr(Expression1, Env, R1),
     evaluator_expr(Expression2, Env, R2),
     evaluator_comparators(R1, Operator, R2, Result).
@@ -149,11 +149,11 @@ evaluator_expr(t_increment(Variable), Env, NewEnv) :- seek(Variable, Result, Env
 evaluator_expr(t_decrement(Variable), Env, NewEnv) :- seek(Variable, Result, Env), NewValue is Result-1, change_comm(Variable, NewValue, Env, NewEnv).
 
 evaluator_expr(t_ternary_expression(Condition, TrueExpression, _), Env, Result) :-
-    eval_condition(Condition, Env, true),
+    evaluator_condition(Condition, Env, true),
     evaluator_expr(TrueExpression, Env, Result).
 
 evaluator_expr(t_ternary_expression(Condition, _, FalseExpression), Env, Result) :-
-    eval_condition(Condition, Env, false),
+    evaluator_condition(Condition, Env, false),
     evaluator_expr(FalseExpression, Env, Result).
 
 evaluator_expr(t_boolean_expression(X, t_boolean_operator(Operator), Y), Env, Result) :-
@@ -228,11 +228,11 @@ error_undeclared(Name) :- error('Error: ~w Undeclared', [Name]).
 ?- not(evaluator_expr(t_variable_name(x), [], _)).
 ?- evaluator_expr(t_variable_name("String"), [], "String").
 
-?- eval_condition(t_condition(t_variable_name(x), t_comparison_operator(>),  t_integer(4)), [(int, x, 6)], true).
-?- eval_condition(t_condition(t_variable_name(x), t_comparison_operator(<),  t_integer(4)), [(int, x, 2)], true).
-?- eval_condition(t_condition(t_variable_name(x), t_comparison_operator(>=), t_integer(4)), [(int, x, 6)], true).
-?- eval_condition(t_condition(t_variable_name(x), t_comparison_operator(>=), t_integer(4)), [(int, x, 4)], true).
-?- eval_condition(t_condition(t_variable_name(x), t_comparison_operator(=<), t_integer(4)), [(int, x, 2)], true).
-?- eval_condition(t_condition(t_variable_name(x), t_comparison_operator(=<), t_integer(4)), [(int, x, 4)], true).
-?- eval_condition(t_condition(t_variable_name(x), t_comparison_operator(==), t_integer(4)), [(int, x, 4)], true).
-?- eval_condition(t_condition(t_variable_name(x), t_comparison_operator('!='), t_integer(4)), [(int, x, 2)], true).
+?- evaluator_condition(t_condition(t_variable_name(x), t_comparison_operator(>),  t_integer(4)), [(int, x, 6)], true).
+?- evaluator_condition(t_condition(t_variable_name(x), t_comparison_operator(<),  t_integer(4)), [(int, x, 2)], true).
+?- evaluator_condition(t_condition(t_variable_name(x), t_comparison_operator(>=), t_integer(4)), [(int, x, 6)], true).
+?- evaluator_condition(t_condition(t_variable_name(x), t_comparison_operator(>=), t_integer(4)), [(int, x, 4)], true).
+?- evaluator_condition(t_condition(t_variable_name(x), t_comparison_operator(=<), t_integer(4)), [(int, x, 2)], true).
+?- evaluator_condition(t_condition(t_variable_name(x), t_comparison_operator(=<), t_integer(4)), [(int, x, 4)], true).
+?- evaluator_condition(t_condition(t_variable_name(x), t_comparison_operator(==), t_integer(4)), [(int, x, 4)], true).
+?- evaluator_condition(t_condition(t_variable_name(x), t_comparison_operator('!='), t_integer(4)), [(int, x, 2)], true).
