@@ -1,0 +1,65 @@
+# variable declaration and assign values to it
+int x;
+x = 25;
+int y = (20 - 5)/3;
+int z = x + y;
+int i = 7;
+int j;
+bool isBool = false;
+float num = 0.123;
+
+# print statement
+print_string("SER502-Spring2023-Team15");
+print_expression(i);
+print_expression(7-1);
+
+# regular for loop
+# enhanced for loop
+print_string("regular and enhanced for loop where regular for loop is being executed inside enhanced for loop");
+for i in range(5;9) {
+    for(j=11; j<4; j--) {
+        print_expression(j);
+    }
+}
+
+# if else control structure
+print_string("if else control structure");
+int a = 22;
+if( a == 20){
+    print_string("a is equal to 22");
+}
+elif(a == 22){
+    print_string("a is equal to 22");
+}
+elif(a == 5){
+    print_string("a is equal to 22");
+}
+else{
+    print_string("can not find value");
+}
+
+# while loop
+print_string("while loop");
+n = 1;
+while(n<7){
+    print_expression(a);
+    n = n + 1;
+}
+
+# unary expression
+
+
+# Boolean Expressions
+print_string("boolean expression");
+bool isTrue = true or false;
+bool isFalse = true and false;
+print_string("isTrue");
+print_expression(isTrue);
+print_string("isFalse");
+print_expression(isFalse);
+
+# ternary expression
+print_string("ternary expression");
+num = 5;
+int result = (num==5 ? "correct":"incorrect");
+print_expression(result);
