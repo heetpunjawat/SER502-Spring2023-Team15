@@ -49,21 +49,21 @@ evaluator_comm(t_for_enhanced_statement(Variable, Expression1, Expression2, Bloc
     evaluator_condition(t_condition(Expression1, t_comp_operator(<), Expression2), E1, false),
     evaluator_for(t_condition(Variable, t_comp_operator(>=), Expression2), t_before_decrement(Variable), Block, E1, NewEnv).
 
-evaluator_comm(t_if_statement(IfTree), Env, NewEnv) :- evaluator_if(IfTree, Env, NewEnv, _).
-evaluator_comm(t_if_statement(IfTree, _, _), Env, NewEnv) :-
-    evaluator_if(IfTree, Env, NewEnv, true).
-evaluator_comm(t_if_statement(IfTree, ElifTree, _), Env, NewEnv) :-
-    evaluator_if(IfTree, Env, _, false),
-    evaluator_elif(ElifTree, Env, NewEnv, true).
-evaluator_comm(t_if_statement(IfTree, ElifTree, ElseTree), Env, NewEnv) :-
-    evaluator_if(IfTree, Env, _, false),
-    evaluator_elif(ElifTree, Env, _, false),
-    evaluator_else(ElseTree, Env, NewEnv, true).
-evaluator_comm(t_if_statement(IfTree, _), Env, NewEnv) :-
-    evaluator_if(IfTree, Env, NewEnv, true).
-evaluator_comm(t_if_statement(IfTree, ElseTree), Env, NewEnv) :-
-    evaluator_if(IfTree, Env, _, false),
-    evaluator_else(ElseTree, Env, NewEnv, true).
+evaluator_comm(t_if_statement(IfLoop), Env, NewEnv) :- evaluator_if(IfLoop, Env, NewEnv, _).
+evaluator_comm(t_if_statement(IfLoop, _, _), Env, NewEnv) :-
+    evaluator_if(IfLoop, Env, NewEnv, true).
+evaluator_comm(t_if_statement(IfLoop, ElifLoop, _), Env, NewEnv) :-
+    evaluator_if(IfLoop, Env, _, false),
+    evaluator_elif(ElifLoop, Env, NewEnv, true).
+evaluator_comm(t_if_statement(IfLoop, ElifLoop, ElseLoop), Env, NewEnv) :-
+    evaluator_if(IfLoop, Env, _, false),
+    evaluator_elif(ElifLoop, Env, _, false),
+    evaluator_else(ElseLoop, Env, NewEnv, true).
+evaluator_comm(t_if_statement(IfLoop, _), Env, NewEnv) :-
+    evaluator_if(IfLoop, Env, NewEnv, true).
+evaluator_comm(t_if_statement(IfLoop, ElseLoop), Env, NewEnv) :-
+    evaluator_if(IfLoop, Env, _, false),
+    evaluator_else(ElseLoop, Env, NewEnv, true).
 
 evaluator_for(Condition, _, _, Env, Env) :-
     evaluator_condition(Condition, Env, false).

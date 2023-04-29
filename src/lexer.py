@@ -14,7 +14,7 @@ class PhoenixConstants:
 class PHXLexer(Lexer):
 
    # Set of tokens
-    tokens = {ASSIGN, DECREMENT, DIVIDE, EQUAL, FLOAT, GE, GT, IDENTIFIER, INCREMENT, LE, LT, MINUS, MODULO,
+    tokens = {ASSIGN, DECREMENT, DIVIDE, EQUAL, FLOAT, GE, GT, ID, INCREMENT, LE, LT, MINUS, MODULO,
                  MULTIPLY, NOT_EQUAL, NUMBER, PLUS, POW, SINGLE_QUOTES, STRING} 
 
     # Literals
@@ -27,14 +27,14 @@ class PHXLexer(Lexer):
 
     # Token patterns
     EQUAL = r'=='
-    ASSIGN = r'='
     DECREMENT = r'\--'
+    ASSIGN = r'='
+    INCREMENT = r'\++'
     DIVIDE = r'/'
     FLOAT = r'\d+\.\d+'
     GE = r'>='
     GT = r'>'
-    IDENTIFIER = r'[a-zA-Z_][a-zA-Z0-9_]*'
-    INCREMENT = r'\++'
+    ID = r'[a-zA-Z_][a-zA-Z0-9_]*'
     LE = r'<='
     LT = r'<'
     MINUS = r'-'

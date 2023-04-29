@@ -35,8 +35,7 @@ if_statement(t_if_statement(IfLoop, ElseLoop)) -->
     if_clause(IfLoop),
     else_clause(ElseLoop).
 
-if_statement(t_if_statement(IfLoop)) -->
-    if_clause(IfLoop).
+if_statement(t_if_statement(IfLoop)) --> if_clause(IfLoop).
 
 /* If, Elif, Else Clauses */
 if_clause(t_if(Condition, Block)) -->
