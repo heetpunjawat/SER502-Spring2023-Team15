@@ -13,40 +13,39 @@ class PhoenixConstants:
     # PHX lexer implementation
 class PHXLexer(Lexer):
 
-
-    # Ignore patterns
-    phxignore = ' \t'
-    phxignore_newline = r'\n+'
-    phxignore_comment = r'\#(.*)'
+   # Set of tokens
+    tokens = {ASSIGN, DECREMENT, DIVIDE, EQUAL, FLOAT, GE, GT, IDENTIFIER, INCREMENT, LE, LT, MINUS, MODULO,
+                 MULTIPLY, NOT_EQUAL, NUMBER, PLUS, POW, SINGLE_QUOTES, STRING} 
 
     # Literals
-    phxliterals = {'{', '}', ',', '?', ';', ':', '[', ']', '(', ')', '.', '!'}
+    literals = {'{', '}', ',', '?', ';', ':', '[', ']', '(', ')', '.', '!'}
 
-    # Set of tokens
-    phxtokens = {phxASSIGN, phxDECREMENT, phxDIVIDE, phxEQUAL, phxFLOAT, phxGE, phxGT, phxIDENTIFIER, phxINCREMENT, phxLE, phxLT, phxMINUS, phxMODULO,
-                 phxMULTIPLY, phxNOT_EQUAL, phxNUMBER, phxPLUS, phxPOW, phxSINGLE_QUOTES, phxSTRING}
+    # Ignore patterns
+    ignore = ' \t'
+    ignore_newline = r'\n+'
+    ignore_comment = r'\#(.*)'
 
     # Token patterns
-    phxASSIGN = r'='
-    phxDECREMENT = r'\--'
-    phxDIVIDE = r'/'
-    phxEQUAL = r'=='
-    phxFLOAT = r'\d+\.\d+'
-    phxGE = r'>='
-    phxGT = r'>'
-    phxIDENTIFIER = r'[a-zA-Z_][a-zA-Z0-9_]*'
-    phxINCREMENT = r'\++'
-    phxLE = r'<='
-    phxLT = r'<'
-    phxMINUS = r'-'
-    phxMODULO = r'%'
-    phxMULTIPLY = r'\*'
-    phxNOT_EQUAL = r'!='
-    phxNUMBER = r'\d+'
-    phxPLUS = r'\+'
-    phxPOW = r'\^'
-    phxSINGLE_QUOTES = r'\''
-    phxSTRING = r'\".*\"'
+    ASSIGN = r'='
+    DECREMENT = r'\--'
+    DIVIDE = r'/'
+    EQUAL = r'=='
+    FLOAT = r'\d+\.\d+'
+    GE = r'>='
+    GT = r'>'
+    IDENTIFIER = r'[a-zA-Z_][a-zA-Z0-9_]*'
+    INCREMENT = r'\++'
+    LE = r'<='
+    LT = r'<'
+    MINUS = r'-'
+    MODULO = r'%'
+    MULTIPLY = r'\*'
+    NOT_EQUAL = r'!='
+    NUMBER = r'\d+'
+    PLUS = r'\+'
+    POW = r'\^'
+    SINGLE_QUOTES = r'\''
+    STRING = r'\".*\"'
 
 def phxReadInputFile(phxFileName):
     phxData = None
