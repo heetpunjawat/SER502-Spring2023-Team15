@@ -20,6 +20,7 @@ Janki Padiya - Testing
 
 
 Milestone 2
+- The final presentation has been compiled and approved by everyone
 
 Omkar Pisal: 
 -Worked on creating and implementing lexer
