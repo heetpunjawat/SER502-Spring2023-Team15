@@ -26,10 +26,10 @@ class PHXLexer(Lexer):
     ignore_comment = r'\#(.*)'
 
     # Token patterns
+    EQUAL = r'=='
     ASSIGN = r'='
     DECREMENT = r'\--'
     DIVIDE = r'/'
-    EQUAL = r'=='
     FLOAT = r'\d+\.\d+'
     GE = r'>='
     GT = r'>'
