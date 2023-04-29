@@ -172,7 +172,7 @@ inc_expression(t_before_increment(Variable)) --> [++], var_name(Variable).
 /* CHECKS */
 /* Verify if variable name is not a keyword */
 var_name(t_var_name(Variable), [Variable | Tail], Tail) :-
-    element(Variable), not_keyword(Variable).
+    atom(Variable), not_keyword(Variable).
 
 not_keyword(Variable) :-
     not(member(Variable, [int, float, bool, string, true, false, for,
@@ -196,4 +196,5 @@ end_of_statement(t_end_of_statement) --> [;].
 boolean_operator(t_boolean_operator(Operator), [Operator | Tail], Tail) :-
     member(Operator, [and, or, not]).
 
-    
+/* Helper predicate for testing, is expected to parse every grammar rule */
+parse(T, L) :- assign_statement(T, L, []);assignment_expression(T, L, []);assignment_operator(T, L, []);block(T, L, []);statement(T, L, []);statement_list(T, L, []);condition(T, L, []);dec_expression(T, L, []);elif_clause(T, L, []);else_clause(T, L, []);end_of_statement(T, L, []);expression(T, L, []);expr_level_1(T, L, []);expr_level_2(T, L, []);expr_level_3(T, L, []);for_enhanced_statement(T, L, []);for_loop_statement(T, L, []);if_statement(T, L, []);if_clause(T, L, []);inc_expression(T, L, []);print_statement(T, L, []);program(T, L, []); ternary_expression(T, L, []);value(T, L, []);var_change_part(T, L, []);var_decl_statement(T, L, []);while_loop_statement(T, L, []);var_name(T, L, []);var_type(T, L, []);comp_operator(T, L, []);integer_val(T, L, []);float_val(T, L, []);string_val(T, L, []);boolean_val(T, L, []);boolean_operator(T, L, []).

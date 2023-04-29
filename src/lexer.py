@@ -64,6 +64,7 @@ def phxWriteTokensToFile(phxTokens, phxFileName):
             phxFile.write('{}\n'.format(phxToken.value))
         print("Tokens write operation " + phxFileName + ": " + PhoenixConstants.GREEN_TEXT +
               'SUCCESS' + PhoenixConstants.NORMAL_TEXT)
+              
 def phxParseArguments():
     phxParser = argparse.ArgumentParser(
         description='PHOENIX Lexer - Converting PHOENIX source code into a list of TOKENS and saving '
