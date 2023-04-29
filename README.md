@@ -1,6 +1,11 @@
 # SER502-Spring2023-Team15
 Private Github repository for SER502 Spring2023 Team 15 Project
 ---------------------------------------------------------------------
+# All the installations steps and testing is specific to MacOS only
+
+### Tools used
+VScode, SWI Prolog, Python 
+---------------------------------------------------------------------
 ## Follow all the installation steps below
 
 ### Installation of homebrew on MacOS 
@@ -32,7 +37,7 @@ OR
 If you any installation error occurs, look up on the internet on how to install the above 
 packages and applications for your computer.
 ---------------------------------------------------------------------
-## Running the Code (Tested only on MacOS)
+## Building the project and running the Code (Tested only on MacOS)
 
 Step 1 - Open the terminal 
 Step 2 - Select the terminal directory to this project folder 
@@ -48,3 +53,4 @@ This file contains all the tokens from the testFinal.phx file that we tested.
 Instead of using testFinal.phx, you can also use other test files such as testPrint.phx,
 testWhile.phx, testBasicForLoop.phx.
 --------------------------------------------------------------------- 
+## Link to the youtube video:
