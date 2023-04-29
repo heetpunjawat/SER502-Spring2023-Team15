@@ -1,23 +1,32 @@
-:- module(file_reader, [file_read/2]).
+/* Define the name of the module and the predicate it exports */
+:- module(read_file, [read_file/2]).
 
-file_read(File, Data) :-
-    open(File, read, Stream),
-    read_file_lines(Stream, Lines),
-    convert_lines(Lines, Data), !,
+/* Read a file and convert its contents to a list of atoms or numbers */
+read_file(FileName, ConvertedData) :-
+    /* Open the file for reading and create a Stream object */
+    open(FileName, read, Stream), 
+    /* Read the entire stream into a list of character codes */    
+    read_stream(Stream, FileData),
+    /* Convert the list of character codes to a list of atoms or numbers */
+    convert(FileData, ConvertedData), !,
+    /* Close the file stream */
     close(Stream).
 
-read_file_lines(Stream, [Chars | List]) :-
-    \+ end_of_file(Stream),
-    read_line_to_characters(Stream, CurrentLineCodes),
-    atom(Chars, CurrentLineCodes),
-    read_file_lines(Stream, List), !.
+/* Read a stream of characters and convert each line to a list of atoms */
+read_stream(Stream, [CurrentLineCharacters | List]) :-
+    /* Check if the end of the stream has been reached */
+    \+ at_end_of_stream(Stream),
+    read_line_to_codes(Stream, Codes),
+    atom_codes(CurrentLineCharacters, Codes),
+    /* Recursively read the rest of the lines in the stream */
+    read_stream(Stream, List), !.
 
-read_file_lines(Stream, []) :- end_of_file(Stream).
+/* Base case: end of the stream has been reached */
+read_stream(Stream, []) :- at_end_of_stream(Stream).
 
-convert_lines([Atom|RestAtoms], [Number|RestNumbers]) :-
-    atom_number(Atom, Number),
-    convert_lines(RestAtoms, RestNumbers).
-convert_lines([Atom|RestAtoms], [Atom|RestAtomsConverted]) :-
-    atom(Atom),
-    convert_lines(RestAtoms, RestAtomsConverted).
-convert_lines([], []). 
+/* Convert a list of atoms to a list of numbers if possible */
+/* Check if the current element can be converted to a number */ 
+convert([H|T], [N|R]) :- atom_number(H, N), convert(T, R).
+/* Recursively convert the rest of the list */
+convert([H|T], [H|R]) :- atom(H), convert(T, R).
+convert([], []).

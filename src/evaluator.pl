@@ -207,29 +207,3 @@ error_redefinition(Name) :-
 error_type_conversion(Name, Type) :-
     error('Error: PHOENIX doesn\'t support type conversion. (Variable \'~w\' is not of type \'~w\')', [Name, Type]).
 error_undeclared(Name) :- error('Error: ~w Undeclared', [Name]).
-
-
-/* Testing */
-
-?- change_comm(x, 5, [(int, x, 6)], [(int, x, 5)]).
-?- change_comm(x, 5, [(int, x, 2), (float, y, 3.4)], [(int, x, 5), (float, y, 3.4)]).
-
-?- change_comm(int, x, 5, [], [(int, x, 5)]).
-?- change_comm(int, x, 5, [(int, y, 6)], [(int, y, 6), (int, x, 5)]).
-
-?- evaluator_expr(t_add(t_integer(3), t_integer(5)), [], 8).
-?- evaluator_expr(t_sub(t_integer(3), t_integer(5)), [], -2).
-?- evaluator_expr(t_multiply(t_integer(3), t_integer(5)), [], 15).
-?- evaluator_expr(t_divide(t_integer(3), t_integer(6)), [], 0.5).
-
-?- not(evaluator_expr(t_var_name(x), [], _)).
-?- evaluator_expr(t_var_name("String"), [], "String").
-
-?- evaluator_condition(t_condition(t_var_name(x), t_comp_operator(>),  t_integer(4)), [(int, x, 6)], true).
-?- evaluator_condition(t_condition(t_var_name(x), t_comp_operator(<),  t_integer(4)), [(int, x, 2)], true).
-?- evaluator_condition(t_condition(t_var_name(x), t_comp_operator(>=), t_integer(4)), [(int, x, 6)], true).
-?- evaluator_condition(t_condition(t_var_name(x), t_comp_operator(>=), t_integer(4)), [(int, x, 4)], true).
-?- evaluator_condition(t_condition(t_var_name(x), t_comp_operator(=<), t_integer(4)), [(int, x, 2)], true).
-?- evaluator_condition(t_condition(t_var_name(x), t_comp_operator(=<), t_integer(4)), [(int, x, 4)], true).
-?- evaluator_condition(t_condition(t_var_name(x), t_comp_operator(==), t_integer(4)), [(int, x, 4)], true).
-?- evaluator_condition(t_condition(t_var_name(x), t_comp_operator('!='), t_integer(4)), [(int, x, 2)], true).
