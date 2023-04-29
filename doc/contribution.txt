@@ -23,16 +23,19 @@ Milestone 2
 - The final presentation has been compiled and approved by everyone
 
 Omkar Pisal: 
--Worked on creating and implementing lexer
--Lexer bug fixing
+- Worked on creating and implementing lexer
+- Lexer bug fixing
 
 Manan Kohli:
--Worked on creating and implementing evaluator
--Evaluator bug fixing 
+- Worked on creating and implementing evaluator
+- Evaluator bug fixing 
+- Worked on PPT 
 
 Janki Padiya:
 - Worked on creating and implementing tokenReader
 - Creating and executing tests
+- Created PPT
+- tokenReader bug fixing
 
 Shivanjay Wagh:
 - Worked on creating and implementing main
