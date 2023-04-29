@@ -1,0 +1,52 @@
+int x;
+x = 5;
+
+int y = (15 + 25)/2;
+
+int z = x + y;
+
+bool isBoolean = true;
+float number = 0.314;
+
+
+# PRINT STATEMENTS
+print_str("Testing Print statements");
+print_expr(10-5);
+print_expr(z);
+print_expr(number);
+
+
+# REGULAR LOOP INSIDE ENHACED LOOP
+print_str("Regular loop inside Enhanced loop");
+int i;
+int j;
+for i in range(1;3) {
+    for(j=1; j<6; j++) {
+        print_expr(j);
+    }
+}
+
+
+# WHILE
+print_str("Testing While Loop");
+int a = 3;
+while(a<10){
+    print_expr(a);
+    a = a + 1;
+}
+
+
+# Boolean Expressions
+print_str("Testing Boolean expressions");
+bool isTrue = true;
+bool isFalse = false;
+print_str("isTrue");
+print_expr(isTrue);
+print_str("isFalse");
+print_expr(isFalse);
+
+
+# TERNARY EXPRESSION
+print_str("Testing Ternary expressions");
+int T = (15>20 ? 15+20:20-15);
+print_expr(T);

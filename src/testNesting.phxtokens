@@ -1,23 +1,9 @@
 int
 a
 =
-7
+10
 ;
 if
-(
-a
-=
-=
-3
-)
-{
-print_str
-(
-"Equal to 3"
-)
-;
-}
-elif
 (
 a
 =
@@ -27,7 +13,7 @@ a
 {
 print_str
 (
-"Equal to 5"
+"Integer is 5"
 )
 ;
 }
@@ -36,12 +22,26 @@ elif
 a
 =
 =
-7
+10
 )
 {
 print_str
 (
-"Equal to 7"
+"Integer is 10"
+)
+;
+}
+elif
+(
+a
+=
+=
+15
+)
+{
+print_str
+(
+"Integer is 15"
 )
 ;
 }
@@ -49,7 +49,7 @@ else
 {
 print_str
 (
-"IDK"
+"Incorrect integer. Choose from 5,10,15 only"
 )
 ;
 }

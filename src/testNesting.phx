@@ -1,14 +1,14 @@
-int a = 7;
+int a = 10;
 
-if( a == 3){
-    print_str("Equal to 3");
+if( a == 5){
+    print_str("Integer is 5");
 }
-elif(a == 5){
-    print_str("Equal to 5");
+elif(a == 10){
+    print_str("Integer is 10");
 }
-elif(a == 7){
-    print_str("Equal to 7");
+elif(a == 15){
+    print_str("Integer is 15");
 }
 else{
-    print_str("IDK");
+    print_str("Incorrect integer. Choose from 5,10,15 only");
 }
