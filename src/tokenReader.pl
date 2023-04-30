@@ -1,3 +1,8 @@
+/*
+Author: Janki Padiya 
+Purpose: Tokenizer for the program 
+*/
+
 /* Define the name of the module and the predicate it exports */
 :- module(read_file, [read_file/2]).
 

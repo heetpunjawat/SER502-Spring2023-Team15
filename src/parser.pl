@@ -1,3 +1,8 @@
+/*
+Author: Heet Punjawat
+Purpose: Parser for the program
+*/
+
 :- module(program, [program/3]).
 :- table expr_level_1/3, expr_level_2/3, expr_level_3/3.
 

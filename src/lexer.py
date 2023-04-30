@@ -1,3 +1,6 @@
+# Author: Omkar Pisal 
+# Purpose: Lexical analyzer for the program
+
 import os
 import sys
 import argparse

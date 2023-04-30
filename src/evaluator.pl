@@ -1,4 +1,8 @@
-/* Evaluation*/
+/*
+Author: Manan Kohli 
+Co-author: Heet Punjawat 
+Purpose: Evaluator 
+*/
 
 :- module(eval_program, [eval_program/2]).
 

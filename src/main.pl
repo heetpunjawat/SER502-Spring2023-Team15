@@ -1,3 +1,8 @@
+/*
+Author: Shivanjay Wagh
+Purpose: Main file for the program
+*/
+
 :- use_module(tokenReader).
 :- use_module(parser).
 :- use_module(evaluator).
