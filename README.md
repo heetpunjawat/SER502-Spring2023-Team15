@@ -1,7 +1,7 @@
 # SER502-Spring2023-Team15
 Private Github repository for SER502 Spring2023 Team 15 Project
 ---------------------------------------------------------------------
-# All the installations steps and testing is specific to MacOS only
+# ** All the installations steps and testing is specific to MacOS only **
 
 ### Tools used
 VScode, SWI Prolog, Python 
